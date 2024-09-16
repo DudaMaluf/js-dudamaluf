@@ -1,174 +1,65 @@
-// variaveis da bolinha 
-let xBolinha = 300;
-let yBolinha = 200;
-let diametro = 15;
-let raio = diametro / 2 ;
+// fantasia, aventura , drama 
 
-//velocidade da bolinha 
-let velocidadeXBolinha = 6;
-let velocidadeYBolinha = 6;
-let raqueteComprimento = 10;
-let raqueteAltura = 90;
+// a viagem de chihiro, LIVRE, fantasia, aventura 
+// paddington, LIVRE ,fantasia , aventura 
 
-//variaveis da raquete 
-let xRaquete = 5;
-let yRaquete = 150;
+// as aventuras de pi, 10, drama, fantasia, aventura 
+// Depois da chuva, 10, drama 
+// guardiões da galáxia, 12, fantasia, aventura 
+// ladrões de bicicleta, 12, drama 
+// o menino que descobriu o vento , 14, drama 
 
-//variáveis do oponente
-let xRaqueteOponente = 585;
-let yRaqueteOponente = 150;
-let velocidadeYOponente;
-
-let colidiu = false;
-
-//placar do jogo
-let meusPontos = 0;
-let pontosDoOponente = 0;
-
-//sons do jogo
-let raquetada;
-let ponto;
-let trilha;
-
-//chance do oponente errar 
-let chanceDeErrar = 0;
-
-
-function preload() {
-    trilha = loadSound("trilha.mp3");
-    ponto = loadSound("ponto.mp3");
-    raquetada = loadSound("raquetada.mp3");
-
-}
-
-function calculaChanceDeErrar() {
-  if (pontosDoOponente >= meusPontos) {
-    chanceDeErrar += 1
-    if (chanceDeErrar >= 39){
-    chanceDeErrar = 40
-    }
-  } else {
-    chanceDeErrar -= 1
-    if (chanceDeErrar <= 35){
-    chanceDeErrar = 35
-    }
-  }
-}
-
+let campoIdade;
+let campoFantasia;
+let cdampoAventura;
 
 function setup() {
-    createCanvas(600, 400);
-  trilha.loop();
+    createCanvas(800, 400);
+    createElement("h2", "Recomendador de filmes");
+   createSpan("Sua idade:");
+    campoIdade = createInput("5");
+    campoFantasia = createCheckbox("Gosta de Fantasia ?");
+  campoAventura = createCheckbox("Gosta de aventura?");
 }
 
 function draw() {
-  background(0);
-  mostraBolinha();
-  movimentaBolinha();
-  verificaColisaoBorda();
-  mostraRaquete(xRaquete, yRaquete);
-  movimentaMinhaRaquete();
-  //verificaColisaoRaquete();
-  verificaColisaoRaquete(xRaquete, yRaquete);
-  mostraRaquete(xRaqueteOponente, yRaqueteOponente);
-  movimentaRaqueteOponente();
-  verificaColisaoRaquete(xRaqueteOponente, yRaqueteOponente);
-  incluiPlacar();
-  marcaPonto();
-}
-
-function mostraBolinha() {
-    circle(xBolinha, yBolinha, diametro)
-}
-
-function movimentaBolinha() {
-    xBolinha += velocidadeXBolinha;
-    yBolinha += velocidadeYBolinha;
-}
-
-function verificaColisaoBorda() {
-    if (xBolinha + raio > width ||
-        xBolinha - raio < 0) {
-        velocidadeXBolinha *= -1;
-    }
-    if (yBolinha + raio > height ||
-        yBolinha - raio < 0) {
-        velocidadeYBolinha *= -1;
-    }
-}
-function mostraRaquete(x,y) {
-    rect(x, y, raqueteComprimento, raqueteAltura);
-}
-
-function movimentaMinhaRaquete() {
-  if(keyIsDown(UP_ARROW)) {
-    yRaquete -= 10;
-  }
-  if(keyIsDown(DOWN_ARROW)) {
-    yRaquete += 10;
-  }
-
-    }
-function verificaColisaoRaquete() {
-    if (xBolinha - raio < xRaquete + raqueteComprimento && yBolinha - raio < yRaquete + raqueteAltura && yBolinha + raio > yRaquete) {
-        velocidadeXBolinha *= -1;
-    raquetada.play();
-    }
-}
-
-function verificaColisaoRaquete(x, y) {
-    colidiu = collideRectCircle(x, y, raqueteComprimento, raqueteAltura, xBolinha, yBolinha, raio);
-    if (colidiu){
-        velocidadeXBolinha *= -1;
-    raquetada.play();
-    }
-}
-
-function movimentaRaqueteOponente(){
-  function movimentaRaqueteOponente(){
-  velocidadeYOponente = yBolinha -yRaqueteOponente - raqueteComprimento / 2 - 30;
-  yRaqueteOponente += velocidadeYOponente + chanceDeErrar
-  calculaChanceDeErrar()
-}
-
-    if (keyIsDown("87")){
-        yRaqueteOponente -= 10;
-    }
-    if (keyIsDown("83")){
-        yRaqueteOponente += 10;
-    }
+    background ("#9C27B0");
+    let idade = campoIdade.value();
+    let gostaDeFantasia = campoFantasia.checked();
+    let gostaDeAventura = campoAventura.checked();
+  
+    let recomendacao = geraRecomendacao(idade, gostaDeFantasia, gostaDeAventura);
+  
+    fill(color(76,0 ,115))
+    textAlign(CENTER, CENTER);
+    textSize(38);
+    text(recomendacao, width/2, height/2);
 
 }
-
-function incluiPlacar() {
-    stroke(255);
-    textAlign(CENTER);
-    textSize(16);
-    fill(color(255, 140, 0));
-    rect(150, 10, 40, 20);
-    fill(255);
-    text(meusPontos, 170, 26);
-    fill(color(255, 140, 0));
-    rect(450, 10, 40, 20);
-    fill(255);
-    text(pontosDoOponente, 470, 26);
-}
-
-
-function bolinhaNaoFicaPresa(){
-    if (XBolinha - raio < 0){
-    XBolinha = 23
-    }
-}
-
-
-function marcaPonto() {
-    if (xBolinha > 590) {
-        meusPontos += 1;
-      ponto.play();
-    }
-    if (xBolinha < 10) {
-        pontosDoOponente += 1;
-      ponto.play();
+function geraRecomendacao(idade, gostaDeFantasia, gostaDeAventura) {
+    if (idade >= 10) {
+    if (idade >= 14) {
+    return "O menino que descobriu o vento";
+    } else {
+    if(idade >= 12) {
+      if(gostaDeFantasia || gostaDeAventura) {
+          return "Homem-aranha: no aranhaverso";
+         } else {
+           return "Ladrões de bicicleta";
+          }
+     } else {
+     if (gostaDeFantasia) {
+      return "As aventuras de pi";
+      } else {
+          return "Depois da chuva";
+            }
+       }
+   } 
+    } else {
+        if (gostaDeFantasia) {
+            return "A viagem de chihiro";
+        } else {
+            return "O feitiço do tempo";
+        }
     }
 }
